@@ -13,4 +13,5 @@
 |名称|属性|描述|
 |:-------------:|--|-----|
 |https://httpbin.org/|http debug| A simple HTTP Request & Response Service.|
+|http://dnsbin.zhack.ca|http | DNSbin HTTPbin dnslog|
 |http://requestbin.net/|http | DNSbin HTTPbin dnslog|
