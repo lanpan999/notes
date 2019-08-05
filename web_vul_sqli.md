@@ -4,14 +4,18 @@ SQL注入漏洞(SQL injection) - 对用户请求中的输入的参数值过滤�
 
 ### 类型
 
-* boolean-based blind 基于布尔的盲注
-* time-based blind 基于时间的盲注
-* error-based 基于报错的SQL注入
-* UNION query-based 基于联合查询的SQL注入
-* stacked queries 堆叠查询
-* out-of-band 带外
+* 类型1 - "基于布尔的盲注"(boolean-based blind)
+* 类型2 - "基于时间的盲注"(time-based blind)
+* 类型3 - "基于报错的SQL注入"(error-based)
+* 类型4 - "基于联合查询的SQL注入"(UNION query-based)
+* 类型5 - "堆叠查询"(stacked queries)
+* 类型6 - "带外"(out-of-band)
 
-#### 例1 - "基于时间的盲注"
+#### 类型1 - "基于布尔的盲注"(boolean-based blind)
+
+temp
+
+#### 类型2 - "基于时间的盲注"(time-based blind)
 
 基于时间的盲注(Time-Based Blind SQL Injection Attacks)原理：利用能够"延时"的函数构造SQL语句 然后根据响应时长(响应时间间隔的数值大小)进行判断
 
@@ -25,7 +29,15 @@ SQL注入漏洞(SQL injection) - 对用户请求中的输入的参数值过滤�
       * Postgres `pg_sleep(5)` 如`SELECT CASE WHEN secret = 'secret' THEN pg_sleep(5) ELSE NULL END FROM apps WHERE id = 1 ;`
       * ...
 
-#### 例2 - 堆叠查询
+#### 类型3 - "基于报错的SQL注入"(error-based)
+
+temp
+
+#### 类型4 - "基于联合查询的SQL注入"(UNION query-based)
+
+temp
+
+#### 类型5 - 堆叠查询(stacked queries)
 
 堆叠查询(stacked queries)原理:通过分号分隔 实现执行多条SQL语句
 
