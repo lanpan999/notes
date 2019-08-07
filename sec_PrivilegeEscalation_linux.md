@@ -50,13 +50,13 @@ find / -mmin -10 2>/dev/null | grep -Ev "^/proc"
 # 内存中的密码
 # In memory passwords
 
-strings /dev/mem -n10 | grep -i PASS
+strings /dev/mem -n 10 | grep -i PASS
 
 # ---------------
 # 查找敏感文件
 # Find sensitive files
 
-$ locate password | more      
+$ locate password | more
 如结果
 /boot/grub/i386-pc/password.mod
 /etc/pam.d/common-password
@@ -66,6 +66,8 @@ $ locate password | more
 ...
 
 ```
+
+如果主机上部署了web应用等代码,可以考虑从代码中搜集敏感信息(IP 域名 凭证)
 
 
 #### Scheduled tasks
