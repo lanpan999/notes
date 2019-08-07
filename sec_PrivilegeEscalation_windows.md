@@ -9,68 +9,6 @@
 
 ### Checklists - Windows提权之前必要信息搜集
 
-#### 检测Sysmon
-
-拿到Windows主机首先判断是否有Sysmon  检测方法参考 [Red Teaming Experiments](https://ired.team/offensive-security/enumeration-and-discovery/detecting-sysmon-on-the-victim-host)
-
-* 检测Sysmon的方法:
-  * 1 “进程名” - 可被修改 如果不存在名为"Sysmon"的进程，不表示Sysmon必定不存在。
-  * 2 “服务名称与描述” 可被修改 如果不存在相关服务，不表示Sysmon必定不存在。
-  * 3 Windows事件(Windows Events) 
-  * 4 运行fltMC.exe(win7下测试发现 需要管理员权限启动)
-  * 5 Sysmon Tools + Accepted Eula
-  * 6 如果确认存在，检查Sysmon的配置信息
-  * 7 直接搜索磁盘 查找Sysmon的配置文件
-  * 8 从注册表中提取Sysmon的规则 powershell命令
-
-```
-# 1 “进程名” 
-
-tasklist /v
-
-# 第三方脚本
-# 进程枚举 - 根据名称查找  如查找名为"Sysmon"的进程进程信息 注意Sysmon安装时可自定义进程名称
-Get-Process | Where-Object { $_.ProcessName -eq "Sysmon" }
-
-
-# 2 “服务名称与描述”
-
-# 服务枚举 - 根据描述查找
-Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
-
-# 服务枚举 - 根据名称查找
-Get-Service | where-object {$_.DisplayName -like "*sysm*"}
-
-
-# 3 Windows事件(Windows Events) 
-# 通过 Windows事件(Windows Events) 检测Sysmon  如果输出有内容则确认存在  输出没有内容通常是不存在 需结合其他情况综合判断
-reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
-
-# 4 运行fltMC.exe(win7下测试发现 需要管理员权限启动)
-# 即使您可以更改sysmon服务和驱动程序名称，"sysmon altitude"始终相同为固定值 385201
-fltMC.exe
-
-
-# 5 Sysmon Tools + Accepted Eula
-# powershell下执行
-ls HKCU:\Software\Sysinternals
-# 如果System Moniter 为1 则存在
-
-# 6 如果确认存在，检查Sysmon的配置信息
-sysmon -c
-
-# 7 直接搜索磁盘 查找Sysmon的配置文件
-findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
-
-# 8 从注册表中提取Sysmon的规则 powershell命令
-(Get-SysmonConfiguration).Rules
-
-# 如查看ProcessCreate规则
-(Get-SysmonConfiguration).Rules[0].Rules
-
-```
-
-
 #### Windows 版本和配置
 ```
 Windows Version and Configuration
