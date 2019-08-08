@@ -52,6 +52,7 @@
 | Thomas Orlita's blog| https://blog.thomasorlita.cz/feed/|
 | Somdev Sangwan(XSStrike AwesomeXSS author) | https://somdev.me/feed |
 | Nytro (个人博客 web 二进制 Defcon BlackHat) |https://nytrosecurity.com/feed/|
+| 0x09al(个人博客)| https://0x09al.github.io/feed.xml|
 
 |名称|属性|描述|
 |:-------------:|--|-----|
