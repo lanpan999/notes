@@ -341,6 +341,17 @@ SELECT 1 from mysql.user order by 1 limit 0,1 into outfile '/tmp/s.php' LINES TE
 
 ### SDL - 防御与修复方案
 
+* 0.使用成熟的ORM框架
+
+对象-关系映射(Object-Relational Mapping,ORM) 主要实现了面向对象编程中的"对象"到"关系数据库数据"的映射,正确使用成熟的ORM框架考可避免SQL注入
+
+|语言|ORM框架|
+|:-------------:|-----|
+|Java|Hibernate|
+|python|SQLAlchemy|
+|golang|xorm|
+
+
 * 1.使用带有"参数化查询"的"预编译语句"
 
 "参数化查询"(Parameterized Query / Parameterized Statement)的原理:强制开发人员预先定义好所有SQL语句(留空待填) 应用程序将"实际参数"传入并查询.
