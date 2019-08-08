@@ -84,25 +84,26 @@ WAF的基础架构：串联(会话链路)、旁路(无法阻断)
 
 ### WAF/CDN 根本绕过方式1 - 攻击源站IP
 
-* 针对没有设置"回源IP防护"的站点 可找到源站IP 直接攻击
-  * 找到源站IP - 直接对源站的真实ip发起请求,流量不经过WAF/CDN
-    * 方式1 查找相关域名的A记录
-      * DNS历史记录(DNS history records) - 查看该域名DNS解析的历史记录 主要是A记录 (可能是该站最开始没上WAF/CDN时的IP) 参考工具[vincentcox/bypass-firewalls-by-DNS-history](https://github.com/vincentcox/bypass-firewalls-by-DNS-history)
-      * 子域名的A记录
-      * 该公司其他域名的A记录
-    * 方式2 其他服务 - 与该域名的其他服务(非web)进行交互
-      * 邮件服务 - 获取到源站IP(设法让目标站发送邮件，如向一个不存在的地址aCLa21lc@domain.com发送邮件，通常会收到失败反馈邮件，下载邮件的.eml源文件，找到其中`Return-Path`字段中的IP地址、子域名)
-      * 尝试通过IP访问目标 命令 `curl -k -H "Host: sub.domain.com" https://109.234.165.77`
-    * 方式3 全网扫描 - 匹配网页标题title
+* 前置条件:针对目标必须是 开启了WAF但没有设置"回源IP防护"的站点 可找到源站IP(直接对源站的真实ip发起请求,流量不经过WAF/CDN)
+  * 方式1 查找相关域名的A记录
+    * DNS历史记录(DNS history records) - 查看该域名DNS解析的历史记录 主要是A记录 (可能是该站最开始没上WAF/CDN时的IP) 参考工具[vincentcox/bypass-firewalls-by-DNS-history](https://github.com/vincentcox/bypass-firewalls-by-DNS-history)
+    * 子域名的A记录
+    * 该公司其他域名的A记录
+  * 方式2 其他服务 - 与该域名的其他服务(非web)进行交互
+    * 邮件服务 - 获取到源站IP(设法让目标站发送邮件，如向一个不存在的地址aCLa21lc@domain.com发送邮件，通常会收到失败反馈邮件，下载邮件的.eml源文件，找到其中`Return-Path`字段中的IP地址、子域名)
+    * 尝试通过IP访问目标 命令 `curl -k -H "Host: sub.domain.com" https://109.234.165.77`
+  * 方式3 全网扫描 - 利用"网络空间引擎" 匹配网页标题(title)
 * 修复方案: 在源站上正确设置"回源IP防护" 以避免攻击者直接攻击源站IP 策略如下
   * 1.允许WAF的IP段访问源站的业务端口(80/443)
   * 2.禁止公网IP访问源站的业务端口(80/443)
 
 ### WAF 根本绕过方式2 - 使用WAF无法识别的TLS加密算法
 
-TLS Client(浏览器)在TLS握手第一步时可主动选择"加密算法",如果能找到WAF不支持但后端应用支持的加密算法,则可绕过WAF
+* 前置条件 - WAF和WebServer都配有SSL证书(这种情况不常见)
+* 流量经过 - request -> WAF(配有SSL证书解密流量,解不开则放行) -> WebServer(配有SSL证书解密流量)
+* 绕过原理 - TLS Client(浏览器/curl)在TLS握手第一步时可主动选择SL/TLS ciphers"加密算法",如果找到WAF不支持的加密算法(WAF放行)且WebServer配有SSL证书支持解密该加密算法,则请求可绕过WAF直达WebServer
 
-[LandGrey/abuse-ssl-bypass-waf](https://github.com/LandGrey/abuse-ssl-bypass-waf)
+参考[LandGrey/abuse-ssl-bypass-waf](https://github.com/LandGrey/abuse-ssl-bypass-waf)
 
 ### WAF - 绕过规则
 
