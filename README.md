@@ -42,7 +42,7 @@
  * [Red - 基础 - Windows远控](sec_RAT.md)
  * [sec - 基础 - 字符与编码 格式转换](sec_encoder.md)
  * [sec - 基础 - regex 正则表达式](sec_regex.md)
- * [sec - 获取最新安全资讯的意义、模式和具体方式](sec_get_news.md)
+ * [sec - 获取最新安全资讯的具体方式(RSS源 twiiter mail)](sec_get_news.md)
  * [sec - 企业信息泄露源 监测(github等代码仓库) + 应急处置](sec_info_scan.md)
  * [sec - 主机端口扫描 思路及自动化](host_sec_port_service_exp.md)
  * [sec - 网络空间引擎 EXP搜索引擎 威胁分析引擎](sec_websites.md)
