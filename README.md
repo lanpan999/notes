@@ -66,13 +66,11 @@
 |项目名称|属性|描述|
 |:-------------:|--|-----|
 |[1135-CobaltStrike-ToolKit](https://github.com/1135/1135-CobaltStrike-ToolKit)|/|CobaltStrike相关:使用Malleable C2 Files定义通信流量实现流量免杀|
+|[solr_exploit](https://github.com/1135/solr_exploit)|Apache Solr远程代码执行漏洞(CVE-2019-0193) Exploit 支持结果回显|
 |[EquationExploit](https://github.com/1135/EquationExploit)|Java C++|在Windows下针对网段批量利用永恒之蓝漏洞(MS-17010 EternalBlue) |
 |[VulSpider](https://github.com/1135/VulSpider)|python2|后台持续运行，获取最新漏洞及每日简报，发送邮件给安全人员|
 |[VulSpiderX](https://github.com/1135/VulSpiderX)|node.js|后台持续运行，获取hackerone最新漏洞，发送邮件给安全人员|
-|[python_demos](https://github.com/1135/python_demos)|python2|python demos|
-|[Go_demos](https://github.com/1135/Go_demos)|golang|golang demos|
 |[dictionary](https://github.com/1135/dictionary)|txt|字典收集 包括user/name/pass/web|
-|[Applescript_demos](https://github.com/1135/Applescript_demos)|applescript|苹果脚本示例，在Mac下使用苹果脚本实现发送iMessage短信|
 
 #### Red-Team
 
