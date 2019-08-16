@@ -110,7 +110,7 @@ sqlmap -u "http://url/news?id=1"--level=3 --smart --dbms "Mysql" --os-shell #交
   * MySQL/PostgreSQL: sqlmap通过文件上传函数上传一个二进制文件:共享库(shared library)到对应文件夹，它包含两个UDF(user-defined functions)用户自定义函数(函数作用都是执行系统命令). 然后在数据库创建该函数 并调用该函数 即可执行系统命令
     * `sys_eval()` 执行系统命令 返回标准输出
     * `sys_exec()` 执行系统命令 返回退出码
-  * Microsoft SQL Server: sqlmap滥用 `xp_cmdshell`存储过程
+  * Microsoft SQL Server: sqlmap使用 `xp_cmdshell`扩展存储过程(extended stored procedure) 它是SQL Server的配置项，启用时能让SQL Server账号执行操作系统命令，返回文本行
     * 如果`xp_cmdshell`存储过程 被禁用(Microsoft SQL Server >= 2005 默认禁用)sqlmap会重新启用它
     * 如果`xp_cmdshell`存储过程 不存在 则从头开始创建它
 
