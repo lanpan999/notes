@@ -6,23 +6,45 @@
 
 ### 漏洞危害
 
-* 漏洞危害:任意文件 写入(新建+覆盖) 修改 读取 删除.即CURD操作
+* 漏洞危害:任意文件"CURD"操作 即 写入(新建+覆盖) 修改 读取 删除
   * 例1 新建文件 - 即上传压缩文件功能. 当（后台)管理员使用zip文件恢复配置 如果解压模块未考虑`../` 直接解压 则存在目录穿越漏洞. 可构造压缩包进行利用
   * 例2 新建文件 - 即上传文件功能. 如果后端未考虑`../` 直接拼接路径与文件名 则存在目录穿越漏洞. 可构造文件名进行利用 `../filename.txt`覆盖任意文件
   * 例3 读取文件 - 即下载文件功能. 如果后端未考虑`../` 直接拼接路径与文件名 则存在目录穿越漏洞. 可构造文件名进行利用 `../filename.txt`读取任意文件
   * 例4 修改文件 - 即编辑文件名功能. 同上.
-  
+
 ### 漏洞利用
 
-* 信息搜集 - 通过读取文件获取敏感信息
-  * 登录信息 获取登录用户名 `/etc/passwd`
-  * 登录信息 获取登录口令密文 `/etc/shadow` 可使用rainbow table破解得到明文
-  * 登录信息 获取ssh私有钥匙 `~/.ssh/id_rsa`
-  * 域名信息 获取域名及ip 可能有内网相关信息 `/etc/hosts`
-  * ACL信息  获取ssh的ACL信息 `/etc/hosts.allow`中的IP被允许登录该主机ssh  而`/etc/hosts.deny`中的IP被禁止登录该主机的ssh
-  * ACL信息  获取IPv4的ACL策略`/etc/sysconfig/iptables` IPv6的ACL策略`/etc/sysconfig/ip6tables`
-  * 日志信息 WEB日志等
+目录穿越导致的 **任意文件读取漏洞** 利用方式如下
+
+* 通过读取文件实现主机信息搜集 获取权限
+  * 系统凭证信息 获取ssh私钥 `~/.ssh/id_rsa`
+  * 系统凭证信息 获取登录用户名 `/etc/passwd`
+  * 系统凭证信息 获取登录口令密文 `/etc/shadow` 可使用rainbow table破解得到明文(概率可能不大)
+  * 代码信息 如读取web应用的代码 做代码审计
+    * Java中Tomcat的`WEB-INF`目录下的`WEB-INF/web.xml`等配置文件 得到`.class`等文件的路径字符串
+    * PHP `php.ini`
+  * 配置信息(可获得 凭证 ip port 域名 URL路径 .log等文件路径)
+    * 数据库配置 redis `redis.conf`
+    * 数据库配置 MySQL `/etc/my.cnf` `/etc/mysql/my.cnf`
+    * 中间间配置 Nginx `nginx.conf`
+    * 中间间配置 Apache `httpd.conf`
+  * 进程信息
+  * 计划任务信息
+  * ACL信息
+    * 获取ssh的ACL信息 `/etc/hosts.allow`中的IP被允许登录该主机ssh  而`/etc/hosts.deny`中的IP被禁止登录该主机的ssh
+    * 获取IPv4的ACL策略 `/etc/sysconfig/iptables` IPv6的ACL策略`/etc/sysconfig/ip6tables`
+  * hosts信息
+    * 获取域名及ip 可能有内网相关信息 `/etc/hosts`
+  * 日志信息
+    * WEB应用日志等
   * 更多参考 [dictionary/file_linux_info.txt](https://github.com/1135/dictionary/blob/master/file_linux_info.txt)
+
+
+目录穿越导致的 **任意文件写入漏洞** 利用方式如下
+
+* webshell - 把webshell写入到目标主机web目录
+* ssh的鉴权认证文件 - 把特制的`/etc/passwd`写入到目标主机
+* ...
 
 ### 基础知识
 
