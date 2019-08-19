@@ -31,7 +31,7 @@ temp
 
 #### 类型3 - "基于报错的SQL注入"(error-based)
 
-temp
+"基于报错的SQL注入"(error-based)原理:使错误消息中包含显示"所需数据",可以从数据库中直接提取敏感数据(而不是一次一个字符)
 
 #### 类型4 - "基于联合查询的SQL注入"(UNION query-based)
 
