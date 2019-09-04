@@ -9,24 +9,16 @@
 
 * 掌握项目代码概况
   * 白盒：安装并查看项目文件夹 确定基本设计架构与功能
-  * 黑盒：访问基本功能，得到HTTP请求与响应中的URL、参数值等，有助于定位到对应代码行
+  * 黑盒：访问基本功能 得到HTTP请求与响应中的**URL**、**参数名称** 有助于定位到对应代码行
 
 * 搜索 PHP危险函数 参考[Exploitable PHP functions](https://stackoverflow.com/questions/3115559/exploitable-php-functions)
   * 命令执行类
   * 代码执行类
   * 文件包含类
+  * 文件操作类
+  * 请求发起类
+  * 自定义的安全过滤函数
   * ...
-
-
-* 搜索 自定义安全过滤函数 - 尝试绕过
-  * 常见的自定义函数名 `RemoveXSS`
-  * 正则函数 `preg_replace`
-
-* 搜索 输入输出点 - 紧跟来自用户的输入的逻辑走向 查看页面输出内容是否可控
-  * 输入：超全局变量 `$_GET $_POST $_SERVER $_SESSION $_COOKIE`等  项目自定义变量名-请求处理相关`requset`等
-  * 入库：`insert` `mysql_escape_string`  项目自定义变量名-数据库操作相关 `db` `database`等
-  * 出库：`query`
-  * 输出：`echo print printf sprintf print_r var_dump die`  项目自定义变量名-响应处理相关`resp`等
 
 * 看到没有写的代码
   * CSRF防御 - 如添加用户等功能
