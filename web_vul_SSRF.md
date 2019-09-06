@@ -2,6 +2,8 @@
 
 SSRF (Server Side Request Forgery) 
 
+任何能够直接或间接地使server发起网络请求的功能，如果该功能的参数是用户可控的，且对用户输入没有做严格的输入验证，就很有可能存在SSRF
+
 ### 分类
 
 SSRF漏洞分类
@@ -12,16 +14,20 @@ SSRF漏洞分类
     * HTTP response status - HTTP响应的状态码(200 500)
     * HTTP response time - 时间间隔的长短(得到HTTP响应时间点-发起HTTP请求的时间点)
 
-
-* 按产生原因分类
-  * 类型1 开发者未没能实现相关功能的安全验证与限制 - 修复方式:严格验证输入
-    * 实例 支持了URL Schema(file等协议) 可读取本机文件 `http://x.com/click.jsp?url=http://127.0.0.1:8082/config/dbconfig.xml`
-  * 类型2 web组件存在SSRF漏洞 - 修复方式:升级组件
-    * ImageMagick CVE-2016-3718
-    * discuz x2.5/x3.0/x3.1/x3.2 SSRF漏洞
-    * Ffmpeg文件读取漏洞 CVE-2016-1897  CVE-2016-1898
-      * 实例 [新浪微盘存在Ffmpeg文件读取漏洞-SSRF](https://www.secpulse.com/archives/49510.html)
-      * 解析 [FFmpeg任意文件读取漏洞分析 - 知乎](https://zhuanlan.zhihu.com/p/28255225)
+* 按触发点分类
+  * 类型1 http请求中有参数值"URL地址" 开发者没做好严格的输入验证 server直接访问"URL地址" 触发SSRF
+    * web在线代理
+    * 资源下载   图片.png、图标.ico、网页.html、文本.txt..
+    * 分享
+    * url跳转 支持了URL Schema(file等协议) 可读取本机文件 `http://x.com/click.jsp?url=http://127.0.0.1:8082/config/dbconfig.xml`
+    * ...
+  * 类型2 用户上传文件后 解析、处理、渲染 文件过程中触发SSRF
+    * 网页处理 (将网页内容变为适应手机屏幕的格式)
+    * 图片处理 如ImageMagick CVE-2016-3718  如[PhantomJS Image Rendering](https://buer.haus/2017/06/29/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/)
+    * 图片处理 ImageMagick CVE-2016-3718
+    * 视频音频处理 Ffmpeg文件读取漏洞 CVE-2016-1897  CVE-2016-1898
+      * [新浪微盘存在Ffmpeg文件读取漏洞-SSRF](https://www.secpulse.com/archives/49510.html)
+      * [FFmpeg任意文件读取漏洞分析 - 知乎](https://zhuanlan.zhihu.com/p/28255225)
 
 ### 原理
 
@@ -41,21 +47,7 @@ SSRFserver -> internalServer【2】SSRFserver为"跳板" 发出Requset2.        
 internalServer -> SSRFserver【3】SSRFserver得到req2的真实响应内容.
 SSRFserver -> attacker      【4】程序逻辑如果将req2的真实响应内容返回给攻击者则为Basic SSRF，否则为Blind SSRF.
 ```
-
-* SSRF漏洞的产生条件
-  * 网络相关的功能 - 任何能够使server发起网络请求的功能 都可能存在SSRF
-  * 参数值过滤不严 - http请求中带有"URL地址"参数值 传给web后端且不经过未严格过滤参数值 就去访问"URL地址"参数值 获取资源(图片.png、图标.ico、网页.html、文本.txt..而攻击者会以获取"其他资源"的方式进行SSRF漏洞利用)
-* 造成SSRF的常见场景 
-  * 文件处理与渲染
-    * 图片处理 如ImageMagick CVE-2016-3718  如[PhantomJS Image Rendering](https://buer.haus/2017/06/29/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/)
-    * 视频音频 ffmpeg
-  * web在线代理
-  * 资源下载（如图片)
-  * 分享
-  * url跳转
-  * 网页转码 (将网页内容变为适应手机屏幕的格式)
-  * ...
-
+ 
 ### 漏洞影响
 
 * 外网 - 对互联网发起请求(攻击其他网站等)
