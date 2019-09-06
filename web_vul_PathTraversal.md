@@ -17,6 +17,9 @@
 目录穿越导致的 **任意文件读取漏洞** 利用方式如下
 
 * 通过读取文件实现主机信息搜集 获取权限
+  * 系统基本信息 内核版本号 `/proc/version`
+  * 系统基本信息 cpu信息 `/proc/cpuinfo`
+  * 系统基本信息 内存信息 `/proc/meminfo`
   * 系统凭证信息 获取ssh私钥 `~/.ssh/id_rsa`
   * 系统凭证信息 获取登录用户名 `/etc/passwd`
   * 系统凭证信息 获取登录口令密文 `/etc/shadow` 可使用rainbow table破解得到明文(概率可能不大)
