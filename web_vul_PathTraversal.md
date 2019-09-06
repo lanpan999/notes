@@ -30,9 +30,12 @@
     * 中间间配置 Apache `httpd.conf`
   * 进程信息
   * 计划任务信息
-  * ACL信息
+  * 网络与ACL信息
     * 获取ssh的ACL信息 `/etc/hosts.allow`中的IP被允许登录该主机ssh  而`/etc/hosts.deny`中的IP被禁止登录该主机的ssh
     * 获取IPv4的ACL策略 `/etc/sysconfig/iptables` IPv6的ACL策略`/etc/sysconfig/ip6tables`
+    * 获取目标主机的TCP连接 `/proc/net/tcp`
+    * 获取目标主机的UDP连接 `/proc/net/udp`
+    * 获取目标主机的ARP缓存 `/proc/net/arp`
   * hosts信息
     * 获取域名及ip 可能有内网相关信息 `/etc/hosts`
   * 日志信息
