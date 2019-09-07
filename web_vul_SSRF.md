@@ -52,15 +52,23 @@ SSRFserver -> attacker      【4】程序逻辑如果将req2的真实响应内�
 
 * 外网 - 对互联网发起请求(攻击其他网站等)
 * 内网 - 对内网中可访问的其他服务器进行探测或攻击
-  * 探测内网 - IP/port/service
-    * ip 探测内网网络架构 存活主机
-    * service 端口开放情况 如数据库类的服务 （常用判断依据：HTTP响应码、HTTP响应时长）
-    * Cloud Instances 如果含有SSRF漏洞的Web应用运行在云实例 可以尝试获取云服务商提供的让内部主机查询自身的元数据
+  * 探测内网(Probe intranet)
+    * IP - 探测内网网络架构 存活主机
+    * service/port - 端口开放情况 如数据库类的服务 （常用判断依据：HTTP响应码、HTTP响应时长）
+    * Cloud Instances - 如果含有SSRF漏洞的Web应用运行在云实例 可以尝试获取"云服务商提供的让内部主机查询自身的元数据"
       * AWS(Aws keys, ssh keys and [more](https://medium.com/@madrobot/ssrf-server-side-request-forgery-types-and-ways-to-exploit-it-part-1-29d034c27978))
       * Google Cloud
-  * 攻击内网 - 获取主机权限
-    * web类漏洞:弱口令、SQLi、PHP FastCGI RCE、Struts2 RCE、Confluence Unauthorized RCE(CVE-2019-3396)、Jenkins插件RCE（CVE-2019-1003000  CVE-2019-1003001  CVE-2019-1003002)...
-    * 其他漏洞:Redis未授权/弱口令导致RCE、MongoDB未授权/弱口令可获取数据、MySQL未授权/弱口令可获取数据、Memcached未授权/弱口令可获取数据可RCE...
+  * 攻击内网 - 获取主机权限/作为[RCE Chain](http://blog.orange.tw/2017/07/how-i-chained-4-vulnerabilities-on.html)中的一环
+    * web - SQLi
+    * web - PHP FastCGI RCE
+    * web - Struts2 RCE
+    * web - Confluence Unauthorized RCE(CVE-2019-3396)
+    * web - Jenkins插件RCE（CVE-2019-1003000  CVE-2019-1003001  CVE-2019-1003002)
+    * Redis未授权/弱口令导致RCE
+    * MongoDB未授权/弱口令可获取数据
+    * MySQL未授权/弱口令可获取数据
+    * Memcached未授权/弱口令可获取数据 可RCE
+    * ...
 
 
 ### 漏洞利用
