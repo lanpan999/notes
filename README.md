@@ -22,7 +22,6 @@
  * [web - 中间件 - 常见问题 修复方案](web_vul_mid_SSL_slowhttpdos.md)
  * [web - 整理 - 靶场WebGoat8的搭建 WriteUp](z_web_webgoat.md)
  * [web - 整理 - 爬虫分类](z_web_crawl.md)
- * [web - 整理 - web基础框架 应用 中间件 前端](web_apps.md)
  * [web - burp 设置 插件 技巧](web_x_burp.md)
  * [web - burp Intruder的4种攻击方式](web_x_burp_Intruder.md)
  * [Red - 公网信息搜集 - 使用Google与Github高级搜索语法 获取 Domain IP code](sec_info_gathering.md)
