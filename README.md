@@ -9,7 +9,7 @@
  * [web - vul - SSRF 原理 利用方式 修复方案](web_vul_SSRF.md)
  * [web - vul - XSS  原理 利用方式 修复方案](web_vul_XSS.md)
  * [web - vul - CSRF 原理 利用方式 修复方案](web_vul_CSRF.md)
- * [web - vul - Path Traversal 原理 利用方式 修复方案]( web_vul_PathTraversal.md)
+ * [web - vul - Path Traversal 原理 利用方式 修复方案](web_vul_PathTraversal.md)
  * [web - vul - Deserialization反序列化 原理 利用方式 修复方案](web_vul_Deserialization.md)
  * [web - vul - Open Redirection 原理 利用方式 修复方案](web_vul_OpenRedirection.md)
  * [web - vul - Clickjacking 原理 利用方式 修复方案](web_vul_ClickJacking.md)
@@ -60,15 +60,19 @@
  * [笔记 - Golang 学习项目 开源图书](note_Golang.md)
  * [笔记 - Machine Learning 机器学习](note_machine_learning.md)
 
-#### MyProject我的项目
+#### 公开案例
+
+ * [Path Traversal to RCE - Atlassian Bitbucket Data Center](web_case_PathTraversal_to_RCE.md) CVE-2019-3397
+
+#### 公开项目
 
 |项目名称|属性|描述|
 |:--:|--|---------|
 |[1135-CobaltStrike-ToolKit](https://github.com/1135/1135-CobaltStrike-ToolKit)|/|CobaltStrike相关:使用Malleable C2 Files定义通信流量实现流量免杀|
 |[solr_exploit](https://github.com/1135/solr_exploit)|/|Apache Solr远程代码执行漏洞(CVE-2019-0193) Exploit 支持结果回显|
 |[EquationExploit](https://github.com/1135/EquationExploit)|Java C++|在Windows下针对网段批量利用永恒之蓝漏洞(MS-17010 EternalBlue) |
-|[VulSpider](https://github.com/1135/VulSpider)|python2|后台持续运行，获取最新漏洞及每日简报，发送邮件给安全人员|
 |[VulSpiderX](https://github.com/1135/VulSpiderX)|node.js|后台持续运行，获取hackerone最新漏洞，发送邮件给安全人员|
+|[VulSpider](https://github.com/1135/VulSpider)|python2|后台持续运行，获取最新漏洞及每日简报，发送邮件给安全人员|
 |[dictionary](https://github.com/1135/dictionary)|txt|字典收集 包括user/name/pass/web|
 
 
