@@ -1,4 +1,20 @@
-### 信息搜集 - github高级语法
+### 信息搜集
+
+* [域名与IP](#信息搜集---domain与ip)
+* [搜索引擎](#信息搜集---搜索引擎)
+* 代码仓库
+* 网盘搜索
+* 针对供应链 - 目标的上下游软件/硬件供应商
+* 针对成员个体 - 员工
+* 历史信息
+  * web页面缓存(多年以前的历史信息)
+  * DNS信息
+  * 曾经泄露的数据/信息
+* 更多[jivoi/awesome-osint](https://github.com/jivoi/awesome-osint)
+
+#### 信息搜集 - 代码仓库
+
+github高级语法
 
 * 编程语言 `language:java`
 * 搜索个人 `user:1135`
@@ -12,9 +28,9 @@
 * 创建日期 `created:>2019-01-03`
 * license类别 `license:apache-2.0`
 
-### 信息搜集 - Google常规语法
+#### 信息搜集 - 搜索引擎
 
-以下语法均经过实测 2019.7
+Google常规语法 以下语法均经过实测 2019.7
 ```
 使用引号搜索完全匹配的结果
 "tallest building"
@@ -81,12 +97,20 @@ site:apple.com -site:www.apple.com -inurl:support
   * [ Google Hacking Database - exploit-db.com](https://www.exploit-db.com/google-hacking-database)
 
 
-### 信息搜集 - IP/Domain
+#### 信息搜集 - Domain与IP
+
+* 子域名搜集方法
+  * 域传送漏洞 - DNS服务器配置不当，导致匿名用户利用"DNS域传送协议"获取某个域的所有记录
+  * SSL证书 - SSL证书.crt文件的SAN(`subjectAltName`)字段 看到该证书支持哪些域名
+  * 暴力枚举 - 暴力枚举子域名 结合自定义社工字典(根据该公司/组织的信息推测域名命名规律)
+  * 搜索引擎 - 搜索语法
+  * 第三方查询网站 - DNS历史、子域名
+  * 其他 - 代码泄露...
 
 |域名相关工具|描述|
 |:-------------:|-----|
 |https://www.virustotal.com/#/domain/qq.com | 综合查询 Whois/子域名/DNS解析历史(支持子域名) |
-|https://crt.sh/?id=1656621355 |Subject Alternative Name (SAN) 是SSL标准`x509`中定义的一个扩展(一个使用了SAN字段的SSL证书 能支持多个不同域名的解析). 下载证书文件`.crt`或在线解析 可从证书文件中的`subjectAltName`下的`DNS:`看到该证书支持哪些域名|
+|https://crt.sh/?id=1656621355 |Subject Alternative Name (SAN) 是SSL标准`x509`中定义的一个扩展(一个使用了SAN(`subjectAltName`)字段的SSL证书 能支持多个不同域名的解析). 下载证书文件`.crt`或在线解析 可从证书文件中的`subjectAltName`下的`DNS:`看到该证书支持哪些域名|
 |https://findsubdomains.com/subdomains-of/qq.com|domain 子域名信息 Find subdomains online.|
 |https://dnsdumpster.com/|domain DNS枚举子域名信息 FREE domain research tool that can discover hosts related to a domain.|
 |https://viewdns.info/|Reverse Whois/IP/domain/DNS/MS/NS Lookup.|
@@ -110,12 +134,3 @@ site:apple.com -site:www.apple.com -inurl:support
 |https://whoer.net/ | web匿名性自测 (通过webRTC等技术获取内网ip) |
 |http://www.ifconfig.io/ | 得到自身外网IP|
 |https://osintframework.com/|OSINT Framework( 自动化工具[Photon: Incredibly fast crawler designed for OSINT.](https://github.com/s0md3v/Photon))|
-
-
-### 更多
-
-* [jivoi/awesome-osint](https://github.com/jivoi/awesome-osint)
-* 供应链攻击 - 渗透目标的上下游供应商 以获取信息
-* 针对成员个体 - 员工
-* web页面缓存 - 多年以前的缓存页面
-* 网盘搜索
