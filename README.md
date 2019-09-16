@@ -24,7 +24,7 @@
  * [web - 整理 - 爬虫分类](z_web_crawl.md)
  * [web - burp 设置 插件 技巧](web_x_burp.md)
  * [web - burp Intruder的4种攻击方式](web_x_burp_Intruder.md)
- * [Red - 公网信息搜集 - 使用Google与Github高级搜索语法 获取 Domain IP code](sec_info_gathering.md)
+ * [Red - 公网信息搜集 - 搜索引擎(Google语法) 代码仓库(Github高级搜索语法) Domain IP 历史信息](sec_info_gathering.md)
  * [Red - APT Phishing - 鱼叉邮件 & 钓鱼网站](sec_Phishing.md)
  * [Red - APT Phishing - 鱼叉邮件中的payload载体(office EvilClippy)](sec_Phishing_mail_payload.md)
  * [Red - 多维度的免杀 无文件攻击 (对抗 终端安全 流量分析 逆向分析 行为分析)](sec_evasion.md) 
