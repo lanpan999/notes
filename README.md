@@ -24,7 +24,7 @@
  * [web - 整理 - 爬虫分类](z_web_crawl.md)
  * [web - burp 设置 插件 技巧](web_x_burp.md)
  * [web - burp Intruder的4种攻击方式](web_x_burp_Intruder.md)
- * [Red - 公网信息搜集 - 搜索引擎(Google语法) 代码仓库(Github高级搜索语法) Domain IP 历史信息](sec_info_gathering.md)
+ * [Red - 公网信息搜集 - 搜索引擎(Google/shodan) 代码仓库(Github) Domain IP 历史信息](sec_info_gathering.md)
  * [Red - APT Phishing - 鱼叉邮件 & 钓鱼网站](sec_Phishing.md)
  * [Red - APT Phishing - 鱼叉邮件中的payload载体(office EvilClippy)](sec_Phishing_mail_payload.md)
  * [Red - 多维度的免杀 无文件攻击 (对抗 终端安全 流量分析 逆向分析 行为分析)](sec_evasion.md) 
@@ -44,7 +44,7 @@
  * [sec - 获取最新安全资讯的具体方式(RSS源 twiiter mail)](sec_get_news.md)
  * [sec - 企业信息泄露源 监测(github等代码仓库) + 应急处置](sec_info_scan.md)
  * [sec - 主机端口扫描 思路及自动化](host_sec_port_service_exp.md)
- * [sec - 网络空间引擎 EXP搜索引擎 威胁分析引擎](sec_websites.md)
+ * [sec - EXP搜索引擎 威胁分析引擎](sec_websites.md)
  * [bin - pwn linux下的二进制程序pwn](bin_pwn.md)
  * [bin - GDB调试 原理 命令](bin_GDB.md)
  * [net - iptables 网络策略管理](net_iptables.md)
@@ -100,4 +100,3 @@
 |[Awesome-static-analysis](https://github.com/mre/awesome-static-analysis)|4k★ 各语言静态分析工具Static analysis tools for all programming languages|
 |[Awesome-pentest-cheat-sheets](https://github.com/coreb1t/awesome-pentest-cheat-sheets)|1k★ #pentesting |
 |[Awesome-malware-analysis](https://github.com/rshipp/awesome-malware-analysis)|4k★ #流量分析 A curated list of awesome malware analysis tools and resources.|
-
