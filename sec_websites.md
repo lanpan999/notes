@@ -5,18 +5,6 @@
 |[exploit-db](https://www.exploit-db.com/)|exp搜索引擎|Offensive Security’s Exploit Database Archive. /remote/webapps/local/dos/papers|
 |[sploitus.com](https://sploitus.com/)|exp搜索引擎|Exploits.|
 
-#### website_资产搜索引擎
-
-资产发现
-
-|名称|属性|描述|
-|:-------------:|--|-----|
-|[Shodan.io](https://www.shodan.io/)|资产搜索引擎|网络空间搜索引擎|
-|[Fofa.so](https://fofa.so/)|网络空间引擎|白帽汇 [规则列表](https://fofa.so/library)|
-|[Zoomeye](https://www.zoomeye.org/)|资产搜索引擎|知道创宇|
-|[censys.io](https://censys.io/ipv4)|资产搜索引擎|censys.io|
-|[portRadar](https://portradar.packet.tel/)|/|端口扫描结果下载|
-
 
 #### website_威胁分析引擎
 
