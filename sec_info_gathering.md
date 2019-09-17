@@ -2,7 +2,8 @@
 
 目录
 * [域名与IP](#信息搜集---domain与ip)
-* [搜索引擎](#信息搜集---搜索引擎)
+* [常规搜索引擎](#信息搜集---常规搜索引擎)
+* [网络空间搜索引擎](#信息搜集---网络空间搜索引擎)
 * 代码仓库
 * 网盘搜索
 * 针对供应链 - 目标的上下游软件/硬件供应商
@@ -29,9 +30,31 @@ github高级语法
 * 创建日期 `created:>2019-01-03`
 * license类别 `license:apache-2.0`
 
-#### 信息搜集 - 搜索引擎
 
-Google常规语法 以下语法均经过实测 2019.7
+#### 信息搜集 - 网络空间搜索引擎
+
+资产发现
+
+|名称|属性|描述|
+|:-------------:|--|-----|
+|[Shodan.io](https://www.shodan.io/)|资产搜索引擎|网络空间搜索引擎|
+|[Fofa.so](https://fofa.so/)|网络空间引擎|白帽汇 [规则列表](https://fofa.so/library)|
+|[Zoomeye](https://www.zoomeye.org/)|资产搜索引擎|知道创宇|
+|[censys.io](https://censys.io/ipv4)|资产搜索引擎|censys.io|
+|[portRadar](https://portradar.packet.tel/)|/|端口扫描结果下载|
+
+
+shodan搜索语法
+```
+ip:106.75.28.4
+ip:106.75.28.0/24
+# 待补充
+```
+
+
+#### 信息搜集 - 常规搜索引擎
+
+Google搜索语法 以下语法均经过实测 2019.7
 ```
 使用引号搜索完全匹配的结果
 "tallest building"
